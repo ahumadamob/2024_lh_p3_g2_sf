@@ -1,23 +1,15 @@
 package imb.lh_p3.Estructura.entity;
-
 	import jakarta.persistence.Entity;
 	import jakarta.persistence.GeneratedValue;
 	import jakarta.persistence.GenerationType;
 	import jakarta.persistence.Id;
-
 	@Entity
 	public class DetalleReceta {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 		private Long id;
-
 	    private String receta;
 	    private String medicamento;
-	    
-		public DetalleReceta() {
-			
-		}
-	    
 		public Long getId() {
 			return id;
 		}
@@ -36,8 +28,4 @@ package imb.lh_p3.Estructura.entity;
 		public void setMedicamento(String medicamento) {
 			this.medicamento = medicamento;
 		}
-
-	    
-	    
-
 }

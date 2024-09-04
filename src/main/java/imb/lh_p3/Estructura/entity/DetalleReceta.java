@@ -1,4 +1,4 @@
-package imb.lh_p3.Estructura.entity;
+package imb.lh_p3.Estructura.Entity;
 	import jakarta.persistence.Entity;
 	import jakarta.persistence.GeneratedValue;
 	import jakarta.persistence.GenerationType;

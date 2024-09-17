@@ -2,8 +2,7 @@ package imb.lh_p3.Estructura.service;
 
 import java.util.List;
 
-
-import imb.lh_p3.Estructura.Entity.Especialidad;
+import imb.lh_p3.Estructura.entity.Especialidad;
 
 public interface IEspecialidadService {
 	public List<Especialidad>mostrarTodos();

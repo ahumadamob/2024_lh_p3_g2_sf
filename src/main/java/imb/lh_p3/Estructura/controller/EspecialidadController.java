@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import imb.lh_p3.Estructura.Entity.Especialidad;
+import imb.lh_p3.Estructura.entity.Especialidad;
 import imb.lh_p3.Estructura.service.IEspecialidadService;
 import imb.lh_p3.Estructura.util.ApiResponse;
 

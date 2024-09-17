@@ -1,7 +1,7 @@
-package imb.lh_p3.Estructura.util;
+package imb.lh_p3.Estructura.Util;
 
-public class ApiResponse <T> {
-
+public class ApiResponse<T> {
+	
 	private String error;
 	private T data;
 	

@@ -1,10 +1,10 @@
 package imb.lh_p3.Estructura.service.jpa;
 
+import imb.lh_p3.Estructura.Entity.Especialidad;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import imb.lh_p3.Estructura.entity.Especialidad;
 import imb.lh_p3.Estructura.repository.EspecialidadRepository;
 import imb.lh_p3.Estructura.service.IEspecialidadService;
 
@@ -14,7 +14,6 @@ public class EspecialidadServiceImpl implements IEspecialidadService{
 	@Autowired
 	private EspecialidadRepository repo;
 	
-	@Override
 	public List<Especialidad> mostrarTodos() {
 		
 		
@@ -50,6 +49,10 @@ public class EspecialidadServiceImpl implements IEspecialidadService{
 		}
 		
 	}
+
+    public Object guardar(Object especialidad) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
 	
 	

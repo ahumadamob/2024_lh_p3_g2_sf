@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import imb.lh_p3.Estructura.Entity.Medico;
 import imb.lh_p3.Estructura.Service.IMedicoService;
-import imb.lh_p3.Estructura.Util.ApiResponse;
+import imb.lh_p3.Estructura.util.ApiResponse;
 
 @RestController
 public class MedicoController {

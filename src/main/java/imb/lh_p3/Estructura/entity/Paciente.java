@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 public class Paciente {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
+	private Long id;
 	private String nombre;
 	private String apellido;
 	private String DNI;
@@ -21,11 +21,11 @@ public class Paciente {
 
 	
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

@@ -1,4 +1,4 @@
-package imb.lh_p3.Estructura.Entity;
+package imb.lh_p3.Estructura.entity;
 
 import java.time.LocalDate;
 

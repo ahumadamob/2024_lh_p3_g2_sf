@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import imb.lh_p3.Estructura.Entity.Turno;
+import imb.lh_p3.Estructura.entity.Turno;
 import imb.lh_p3.Estructura.service.ITurnoService;
 import imb.lh_p3.Estructura.util.ApiResponse;
 

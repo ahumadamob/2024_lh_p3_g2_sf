@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import imb.lh_p3.Estructura.Entity.Medicamento;
+import imb.lh_p3.Estructura.entity.Medicamento;
 import imb.lh_p3.Estructura.repository.MedicamentoRepository;
 import imb.lh_p3.Estructura.service.IMedicamentoService;
 

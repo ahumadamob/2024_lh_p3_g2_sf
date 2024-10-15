@@ -1,13 +1,12 @@
-package imb.lh_p3.Estructura.Service.jpa;
+package imb.lh_p3.Estructura.service.jpa;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import imb.lh_p3.Estructura.Entity.Medico;
-import imb.lh_p3.Estructura.Repository.MedicoRepository;
-import imb.lh_p3.Estructura.Service.IMedicoService;
+import imb.lh_p3.Estructura.entity.Medico;
+import imb.lh_p3.Estructura.repository.MedicoRepository;
+import imb.lh_p3.Estructura.service.IMedicoService;
 
 @Service
 public class MedicoServiceImpl implements IMedicoService{

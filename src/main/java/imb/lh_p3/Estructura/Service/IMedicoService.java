@@ -1,8 +1,8 @@
-package imb.lh_p3.Estructura.Service;
+package imb.lh_p3.Estructura.service;
 
 import java.util.List;
 
-import imb.lh_p3.Estructura.Entity.Medico;
+import imb.lh_p3.Estructura.entity.Medico;
 
 public interface IMedicoService {
 	

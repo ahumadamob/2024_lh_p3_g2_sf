@@ -3,7 +3,8 @@ package imb.lh_p3.Estructura.service.jpa;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import imb.lh_p3.Estructura.Entity.Turno;
+
+import imb.lh_p3.Estructura.entity.Turno;
 import imb.lh_p3.Estructura.repository.TurnoRepository;
 import imb.lh_p3.Estructura.service.ITurnoService;
 

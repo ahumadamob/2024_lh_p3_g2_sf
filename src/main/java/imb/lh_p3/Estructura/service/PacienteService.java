@@ -1,8 +1,8 @@
 package imb.lh_p3.Estructura.service;
 
+import imb.lh_p3.Estructura.Entity.Paciente;
 import java.util.List;
 
-import imb.lh_p3.Estructura.entity.Paciente;
 
 public interface PacienteService {
 	public List<Paciente>mostrarTodos();

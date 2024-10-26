@@ -1,4 +1,4 @@
-package imb.lh_p3.Estructura.controller;
+package imb.lh_p3.Estructura.Controller;
 
 import java.util.List;
 
@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import imb.lh_p3.Estructura.entity.Medico;
-import imb.lh_p3.Estructura.service.IMedicoService;
+import imb.lh_p3.Estructura.Entity.Medico;
+import imb.lh_p3.Estructura.Service.IMedicoService;
+
 import imb.lh_p3.Estructura.util.ApiResponse;
 
 @RestController

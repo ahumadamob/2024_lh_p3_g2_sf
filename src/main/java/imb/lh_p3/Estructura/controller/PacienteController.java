@@ -1,5 +1,6 @@
 package imb.lh_p3.Estructura.controller;
 
+import imb.lh_p3.Estructura.Entity.Paciente;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import imb.lh_p3.Estructura.entity.Paciente;
 import imb.lh_p3.Estructura.service.PacienteService;
 import imb.lh_p3.Estructura.util.ApiResponse;
 

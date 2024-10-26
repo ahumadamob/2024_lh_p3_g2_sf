@@ -24,4 +24,6 @@ public class ObraSocial {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+        
+
 }

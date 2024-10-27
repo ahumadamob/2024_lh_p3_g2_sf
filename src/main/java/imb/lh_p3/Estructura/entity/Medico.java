@@ -1,4 +1,4 @@
-package imb.lh_p3.Estructura.Entity;
+package imb.lh_p3.Estructura.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,14 +7,17 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Medico {
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private Long matricula;
 	private String nombre;
+	private String apellido;
 	private int telefono;
 	private String correo;
 	private String especialidad;
+	
 	public Long getId() {
 		return id;
 	}
@@ -32,6 +35,13 @@ public class Medico {
 	}
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+	
+	public String getApellido() {
+		return apellido;
+	}
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
 	}
 	public int getTelefono() {
 		return telefono;

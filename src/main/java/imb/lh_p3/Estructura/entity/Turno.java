@@ -1,4 +1,6 @@
-package imb.lh_p3.Estructura.Entity;
+package imb.lh_p3.Estructura.entity;
+
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,18 +12,17 @@ public class Turno {
 @Id
 @GeneratedValue(strategy=GenerationType.IDENTITY)
 
-private Integer id;
+private Long id;
 private String turno;
 private String paciente;
-private int fecha;
+private LocalDate fecha;
 private String lugar;
 private boolean estado;
 
-
-public Integer getId() {
+public Long getId() {
 	return id;
 }
-public void setId(Integer id) {
+public void setId(Long id) {
 	this.id = id;
 }
 public String getTurno() {
@@ -36,10 +37,11 @@ public String getPaciente() {
 public void setPaciente(String paciente) {
 	this.paciente = paciente;
 }
-public int getFecha() {
+
+public LocalDate getFecha() {
 	return fecha;
 }
-public void setFecha(int fecha) {
+public void setFecha(LocalDate fecha) {
 	this.fecha = fecha;
 }
 public String getLugar() {

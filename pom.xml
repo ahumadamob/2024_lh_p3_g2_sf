@@ -37,10 +37,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>imb</groupId>
-			<artifactId>lh.p3.clases</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
 	</dependencies>
 
 	<build>

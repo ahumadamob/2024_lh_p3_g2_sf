@@ -1,18 +1,26 @@
-package imb.lh_p3.clinica.entity;
+	package imb.lh_p3.clinica.entity;
+	
+	import jakarta.persistence.Entity;
+	import jakarta.persistence.GeneratedValue;
+	import jakarta.persistence.GenerationType;
+	import jakarta.persistence.Id;
+	import jakarta.validation.constraints.NotNull;
+	import jakarta.validation.constraints.NotBlank;
+	import jakarta.validation.constraints.Size;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
-@Entity
-public class Medico {
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	private Long matricula;
-	private String nombre;
+	
+	@Entity
+	public class Medico{
+	
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private Long id;
+		
+		@NotNull (message = "El nombre del medico es obligatorio")
+		private Long matricula;
+		@NotBlank(message = "El nombre no puede estar en blanco")
+		@Size(min = 3, max = 500, message = "El nombre del medico debe tener entre 2 y 500 caracteres")
+		private String nombre;
 	private String apellido;
 	private int telefono;
 	private String correo;
@@ -61,10 +69,5 @@ public class Medico {
 	public void setEspecialidad(String especialidad) {
 		this.especialidad = especialidad;
 	}
-
-
-
-
-
 
 }

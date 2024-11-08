@@ -50,10 +50,10 @@ import imb.lh_p3.clinica.util.DTOResponse;
 		// Méttodo para obtener un medicamento específico por su ID
 		@GetMapping("/medicamentos/{id}")
 		public ResponseEntity<DTOResponse<Medicamento>> mostrarMedicamentosPorId(@PathVariable("id") Long id) {
-
+			Medicamento medicamento = service.mostrarPorId(id);
 			// Si el medicamento existe, se devuelve el objeto en un DTO y un estatus 200 (OK)
-			if ( service.mostrarPorId(id) != null) {
-				DTOResponse<Medicamento> dto = new DTOResponse<>(200, "",  service.mostrarPorId(id));
+			if (medicamento != null) {
+				DTOResponse<Medicamento> dto = new DTOResponse<>(200, "",  medicamento);
 				return ResponseEntity.status(HttpStatus.OK).body(dto);
 			} else {
 				// Si el medicamento no existe, se lanza una excepción personalizada, que será manejada por GlobalExceptionHandler
@@ -122,7 +122,7 @@ import imb.lh_p3.clinica.util.DTOResponse;
 			}
 		}
 
-		// Método para eliminar un medicamento por su ID
+		// Méttodo para eliminar un medicamento por su ID
 		@DeleteMapping("/medicamentos/{id}")
 		public ResponseEntity<DTOResponse<?>> eliminarRegistro(@PathVariable("id") Long id){
 			if (service.existe(id)){

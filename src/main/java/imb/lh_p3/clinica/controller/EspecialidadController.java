@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import MGException.VerificaExistencia;
+import MGException.VerificaLaNoExistencia;
 import imb.lh_p3.clinica.entity.Especialidad;
 import imb.lh_p3.clinica.service.IEspecialidadService;
 import imb.lh_p3.clinica.util.DTOResponse;
@@ -28,22 +30,14 @@ public class EspecialidadController {
 	
 	@GetMapping("/especialidad")
 	public ResponseEntity<DTOResponse<List<Especialidad>>> mostrarTodos() {
-	    DTOResponse<List<Especialidad>> response = new DTOResponse<>();
-	    List<Especialidad> lista = service.mostrarTodos();
-
-	    if (lista.isEmpty()) {
-	    response.setStatus(400);
-		response.setMessage(null);
-		response.setData(lista);
-		return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-	} else {
-		    response.setStatus(200);
-			response.setMessage(null);
-			response.setData(lista);
-			return  ResponseEntity.status(HttpStatus.OK).body(response);
 		
+		
+		List<Especialidad> lista = service.mostrarTodos();
+		DTOResponse<List<Especialidad>> dto = new DTOResponse<>(200,"Lista de especialidades",lista);
+		return ResponseEntity.status(HttpStatus.OK).body(dto);	
+					
 	}
-	}
+		
 
 	@GetMapping("/especialidad/{id}")
 	public ResponseEntity<DTOResponse<Especialidad>> mostrarEspecialidadPorId(@PathVariable("id") Long id) {
@@ -74,17 +68,17 @@ public class EspecialidadController {
 	@PostMapping("/especialidad")
 	public ResponseEntity<DTOResponse<Especialidad>> crearRegistro(@RequestBody Especialidad especialidad){
 		if(service.existe(especialidad.getId())) {
+			throw new VerificaExistencia("Esta especialidad ya existe");
 			
-			DTOResponse<Especialidad> dto = new DTOResponse<Especialidad>(404,"El id " + especialidad.getId().toString() + " SI existe",null);
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(dto);
 		}else {		
 		
 			DTOResponse<Especialidad> dto = new DTOResponse<Especialidad>(201,"Registro creado correctamente",service.guardar(especialidad));			
 			return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 		}		
-}	
-
 		
+}
+	
+	
 	@PutMapping("/especialidad")
 	public ResponseEntity<DTOResponse<Especialidad>> actualizarRegistro(@RequestBody Especialidad especialidad){
 		DTOResponse<Especialidad> response = new DTOResponse<>();
@@ -95,8 +89,7 @@ public class EspecialidadController {
 			return ResponseEntity.status(HttpStatus.OK).body(dto);
 			
 		}else {
-			DTOResponse<Especialidad> dto = new DTOResponse<Especialidad>(404,"El id " + especialidad.getId().toString() + " SI existe",null);
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(dto);
+			throw new VerificaLaNoExistencia("La especialidad que se desea actualizar no existe");
 		}		
 }	
 
@@ -111,8 +104,7 @@ public class EspecialidadController {
 			DTOResponse<?> dtoSi = new DTOResponse<>(200, " se eliminó correctamente", null);
 			return ResponseEntity.status(HttpStatus.OK).body(dtoSi);
 		}else {
-			DTOResponse<?> dtoNo = new DTOResponse<>(404, "La especialidad no existe", null);
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(dtoNo);
+			throw new VerificaLaNoExistencia("la especialidad no existe");
 		}
 	}
 

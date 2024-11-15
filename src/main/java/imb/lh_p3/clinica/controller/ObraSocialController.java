@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import imb.lh_p3.clinica.entity.ObraSocial;
 import imb.lh_p3.clinica.service.IObraSocialService;
 import imb.lh_p3.clinica.util.ApiResponse;
+import imb.lh_p3.clinica.util.ResourceNotFoundException;
 
 /**
  *
@@ -27,15 +28,15 @@ import imb.lh_p3.clinica.util.ApiResponse;
  */
 @Controller("/")
 public class ObraSocialController {
- /*
+ /*   
     @Autowired
-    private IObraSocialService obraSocialService;
-
+    private IObraSocialService obraSocialService; 
+    
     @GetMapping("/obraSocial")
 public ApiResponse<List<ObraSocial>> mostrarTodosLasObrasSociales(){
 		ApiResponse<List<ObraSocial>> response = new ApiResponse<>();
 		List<ObraSocial> lista = obraSocialService.mostrarTodos();
-
+		
 		if (lista.isEmpty()) {
 			response.setError("No existe ningún obra social.");
 		} else {
@@ -47,13 +48,13 @@ public ApiResponse<List<ObraSocial>> mostrarTodosLasObrasSociales(){
 public	ApiResponse<ObraSocial> mostrarObraSocialPorId(@PathVariable("id")Long id){
 		ApiResponse <ObraSocial> response = new ApiResponse <>();
 		ObraSocial obraSocial = obraSocialService.mostrarPorId(id);
-
+		
 		if (obraSocial==null) {
 			response.setError("No existe el ID "+ id.toString());
 		} else {
 			response.setData(obraSocial);
 		}
-
+		
 		return response;
 	}
 	@PostMapping("/obraSocial")
@@ -76,7 +77,7 @@ public	ApiResponse<ObraSocial> actualizarObraSocial (@RequestBody ObraSocial obr
 			response.setData(nuevaObraSocial);
 		}else {
 			response.setError("La obra social no existe.");
-
+			
 		}
 		return response;
 	}
@@ -91,10 +92,10 @@ public	String eliminarObraSocial(@PathVariable("id") Long id) {
 	}
 */
 
-
+    
     @Autowired
-    private IObraSocialService obraSocialService;
-
+    private IObraSocialService obraSocialService; 
+    
     // Obtener todas las Obras Sociales
     @GetMapping("/obraSocial")
     public ResponseEntity<ApiResponse<List<ObraSocial>>> mostrarTodosLasObrasSociales() {
@@ -103,7 +104,8 @@ public	String eliminarObraSocial(@PathVariable("id") Long id) {
 
         if (lista.isEmpty()) {
             response.setError("No existe ninguna obra social.");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);  // 404 Not Found
+            //return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);  // 404 Not Found
+            throw new ResourceNotFoundException("Excepcion; No existe ninguna obra social.");
         } else {
             response.setData(lista);
             return ResponseEntity.ok(response);  // 200 OK
@@ -118,7 +120,8 @@ public	String eliminarObraSocial(@PathVariable("id") Long id) {
 
         if (obraSocial == null) {
             response.setError("No existe el ID " + id.toString());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);  // 404 Not Found
+          //  return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);  // 404 Not Found
+            throw new ResourceNotFoundException("Excepcion; No existe el ID.");
         } else {
             response.setData(obraSocial);
             return ResponseEntity.ok(response);  // 200 OK
@@ -131,11 +134,13 @@ public	String eliminarObraSocial(@PathVariable("id") Long id) {
         ApiResponse<ObraSocial> response = new ApiResponse<>();
         if (obraSocialService.existe(obraSocial.getId())) {
             response.setError("La obra social ya existe.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);  // 400 Bad Request
+            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);  // 400 Bad Request
+            throw new ResourceNotFoundException("Excepcion; Obra Social ya existe.");
         } else {
             ObraSocial nuevaObraSocial = obraSocialService.guardar(obraSocial);
             response.setData(nuevaObraSocial);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);  // 201 Created
+            //return ResponseEntity.status(HttpStatus.CREATED).body(response);  // 201 Created
+            throw new ResourceNotFoundException("Excepcion; Obra Social agregada.");
         }
     }
 
@@ -149,7 +154,8 @@ public	String eliminarObraSocial(@PathVariable("id") Long id) {
             return ResponseEntity.ok(response);  // 200 OK
         } else {
             response.setError("La obra social no existe.");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);  // 404 Not Found
+            //return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);  // 404 Not Found
+            throw new ResourceNotFoundException("Excepcion; Obra Social no existe.");
         }
     }
 
@@ -160,9 +166,8 @@ public	String eliminarObraSocial(@PathVariable("id") Long id) {
             obraSocialService.eliminar(id);
             return ResponseEntity.ok("Obra social eliminada con éxito.");  // 200 OK
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El ID no existe.");  // 404 Not Found
+           //return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El ID no existe.");  // 404 Not Found
+           throw new ResourceNotFoundException("Excepcion; El ID no existe.");
         }
     }
 }
-
-

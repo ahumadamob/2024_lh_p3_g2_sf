@@ -1,6 +1,5 @@
 package imb.lh_p3.clinica.util;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +8,7 @@ public class DTOResponse<T> {
 	private int status;
 	private List<String> message;
 	private T data;
+	
 	
 	public DTOResponse(int status, List<String> message, T data) {
 		super();
@@ -50,6 +50,5 @@ public class DTOResponse<T> {
 	}
 	
 	
-	
-	
+
 }

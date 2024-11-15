@@ -4,6 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Medicamento {
@@ -11,8 +14,11 @@ public class Medicamento {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@NotNull(message = "El nombre del medicamento es obligatorio")
+	@NotBlank(message = "El nombre no puede estar en blanco")
+	@Size(min = 2, max = 500, message = "El nombre del medicamento debe tener entre 2 y 500 caracteres")
 	private String nombre;
-
+	
 	public Long getId() {
 		return id;
 	}
@@ -25,5 +31,5 @@ public class Medicamento {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-
+	
 }

@@ -20,7 +20,7 @@ public class DTOResponse<T> {
 	public DTOResponse(int status, String message, T data) {
 		super();
 		this.status = status;
-		List<String> messages = new ArrayList();
+		List<String> messages = new ArrayList<String>();
 		messages.add(message);
 		this.message = messages;
 		this.data = data;

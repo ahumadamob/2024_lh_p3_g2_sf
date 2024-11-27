@@ -11,42 +11,36 @@ import imb.lh_p3.clinica.service.PacienteService;
 
 @Service
 public class PacienteServiceImp implements PacienteService {
-
 	@Autowired
-	private PacienteRepository repo;
+	private PacienteRepository repositorio;
 
 	@Override
 	public List<Paciente> mostrarTodos() {
-
-		return repo.findAll();
+		return repositorio.findAll();
 	}
 
 	@Override
 	public Paciente mostrarPorId(Long id) {
-
-		return repo.findById(id).orElse(null);
+		return repositorio.findById(id).orElse(null);
 	}
 
 	@Override
 	public Paciente guardar(Paciente paciente) {
+			return repositorio.save(paciente);
 
-		return repo.save(paciente);
 	}
 
 	@Override
 	public void eliminar(Long id) {
-		repo.deleteById(id);
-
+		repositorio.deleteById(id);
 	}
 
 	@Override
 	public boolean existe(Long id) {
-		if (id==null) {
+		if(id==null){
 			return false;
-		} else {
-			return repo.existsById(id);
+		}else{
+			return repositorio.existsById(id);
 		}
-
 	}
-
 }

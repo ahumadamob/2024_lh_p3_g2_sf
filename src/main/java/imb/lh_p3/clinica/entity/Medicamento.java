@@ -1,12 +1,11 @@
 package imb.lh_p3.clinica.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.util.List;
 
 @Entity
 public class Medicamento {
@@ -14,11 +13,15 @@ public class Medicamento {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	@NotNull(message = "El nombre del medicamento es obligatorio")
 	@NotBlank(message = "El nombre no puede estar en blanco")
 	@Size(min = 2, max = 500, message = "El nombre del medicamento debe tener entre 2 y 500 caracteres")
 	private String nombre;
-	
+
+	@ManyToMany(mappedBy = "medicamentos")
+	private List<Receta> recetas;
+
 	public Long getId() {
 		return id;
 	}
@@ -31,5 +34,12 @@ public class Medicamento {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	
+
+	public List<Receta> getRecetas() {
+		return recetas;
+	}
+
+	public void setRecetas(List<Receta> recetas) {
+		this.recetas = recetas;
+	}
 }

@@ -2,7 +2,13 @@ package imb.lh_p3.clinica.controller;
 
 import java.util.List;
 
+import imb.lh_p3.clinica.exceptions.ElementeYaExisteException;
+import imb.lh_p3.clinica.exceptions.ElementoNoExisteException;
+import imb.lh_p3.clinica.util.DTOResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import imb.lh_p3.clinica.entity.Paciente;
 import imb.lh_p3.clinica.service.PacienteService;
-import imb.lh_p3.clinica.util.ApiResponse;
 
 @RestController
 public class PacienteController {
@@ -22,64 +27,55 @@ public class PacienteController {
 	PacienteService service;
 
 	@GetMapping("/paciente")
-	ApiResponse<List<Paciente>> mostrarTodosLosPacientes(){
-		ApiResponse<List<Paciente>> response = new ApiResponse<>();
+	public ResponseEntity<DTOResponse<List<Paciente>>> mostrarTodosLosPacientes(){
 		List<Paciente> lista = service.mostrarTodos();
-
-		if (lista.isEmpty()) {
-			response.setError("No existe ningún paciente");
-		} else {
-			response.setData(lista);
+		if(lista.isEmpty()){
+			throw new ElementoNoExisteException("No hay pacientes registrados");
+		}else{
+			DTOResponse<List<Paciente>> dto = new DTOResponse<>(200, "Lista de Pacientes", lista);
+			return ResponseEntity.status(HttpStatus.OK).body(dto);
 		}
-		return response;
 	}
 
-	@GetMapping ("/paciente/{id}")
-	ApiResponse<Paciente> mostrarPacientePorId(@PathVariable("id")Long id){
-		ApiResponse <Paciente> response = new ApiResponse <>();
+	@GetMapping("/paciente/{id}")
+	public ResponseEntity<DTOResponse<Paciente>> mostrarPacientePorId(@PathVariable("id") Long id){
 		Paciente paciente = service.mostrarPorId(id);
-
-		if (paciente==null) {
-			response.setError("No existe el ID "+ id.toString());
-		} else {
-			response.setData(paciente);
+		if (paciente == null){
+			throw new ElementoNoExisteException("El paciente con el id: "+ id + " no existe");
+		}else{
+			DTOResponse<Paciente> dto = new DTOResponse<>(200,"Paciente: ",paciente);
+			return ResponseEntity.status(HttpStatus.OK).body(dto);
 		}
-
-		return response;
 	}
 
 	@PostMapping("/paciente")
-	ApiResponse<Paciente> crearPaciente (@RequestBody Paciente paciente){
-		ApiResponse <Paciente> response = new ApiResponse <>();
-		if (service.existe(paciente.getId())) {
-			response.setError("El paciente ya existe");
-		}else {
-			Paciente pacienteGuardado = service.guardar(paciente);
-			response.setData(pacienteGuardado);
+	public ResponseEntity<DTOResponse<Paciente>> guardarPaciente(@Valid @RequestBody Paciente paciente){
+		if(service.existe(paciente.getIdPaciente())){
+			throw new ElementeYaExisteException("Ya hay un registro guardado con este numero de DNI");
+		}else{
+			DTOResponse<Paciente> dto = new DTOResponse<>(201, "Paciente guardado correctamente", service.guardar(paciente));
+			return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 		}
-		return response;
 	}
 
 	@PutMapping("/paciente")
-	ApiResponse<Paciente> actualizarPaciente (@RequestBody Paciente paciente){
-		ApiResponse <Paciente> response = new ApiResponse <>();
-		if (service.existe(paciente.getId())) {
-			Paciente pacienteGuardado = service.guardar(paciente);
-			response.setData(pacienteGuardado);
-		}else {
-			response.setError("El paciente no existe");
-
+	public ResponseEntity<DTOResponse<Paciente>> actualizarPaciente(@Valid @RequestBody Paciente paciente){
+		if (service.existe(paciente.getIdPaciente())){
+			DTOResponse<Paciente> dto = new DTOResponse<>(200,"Paciente actualizado correctamente", service.guardar(paciente));
+			return ResponseEntity.status(HttpStatus.OK).body(dto);
+		}else{
+			throw new ElementoNoExisteException("El paciente que esta intentando actualizar no existe");
 		}
-		return response;
 	}
 
 	@DeleteMapping("/paciente/{id}")
-	String eliminarPaciente(@PathVariable("id") Long id) {
-		if(service.existe(id)) {
+	public ResponseEntity<DTOResponse<?>> eliminarPaciente(@PathVariable("id") Long id){
+		if (service.existe(id)){
 			service.eliminar(id);
-			return "Paciente eliminado con éxito";
+			DTOResponse<?> dtoSi = new DTOResponse<>(200, "Paciente eliminado correctamente", null);
+			return ResponseEntity.status(HttpStatus.OK).body(dtoSi);
 		}else {
-			return "El id  no existe";
+			throw new ElementoNoExisteException("El paciente a elimiinar no existe");
 		}
 	}
 	}

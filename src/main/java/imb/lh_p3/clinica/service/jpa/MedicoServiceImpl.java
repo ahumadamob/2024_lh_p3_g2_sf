@@ -11,40 +11,37 @@ import imb.lh_p3.clinica.service.IMedicoService;
 
 @Service
 public class MedicoServiceImpl implements IMedicoService{
-
 	@Autowired
-	private MedicoRepository repo;
+	private MedicoRepository repositorio;
 
 	@Override
 	public List<Medico> mostrarTodos() {
-		return repo.findAll();
+		return repositorio.findAll();
 	}
 
 	@Override
 	public Medico mostrarPorId(Long id) {
-
-		return repo.findById(id).orElse(null);
+		return repositorio.findById(id).orElse(null);
 	}
 
 	@Override
 	public Medico guardar(Medico medico) {
 
-		return repo.save(medico);
+		return repositorio.save(medico);
+
 	}
 
 	@Override
 	public void eliminar(Long id) {
-		repo.deleteById(id);
-
+		repositorio.deleteById(id);
 	}
 
 	@Override
 	public boolean existe(Long id) {
-		if(id==null) {
+		if(id==null){
 			return false;
-		}else {
-			return repo.existsById(id);
+		}else{
+			return repositorio.existsById(id);
 		}
 	}
-
 }

@@ -2,6 +2,8 @@ package imb.lh_p3.clinica.controller;
 
 import java.util.List;
 
+import imb.lh_p3.clinica.exceptions.ElementeYaExisteException;
+import imb.lh_p3.clinica.exceptions.ElementoNoExisteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import imb.lh_p3.clinica.entity.Consulta;
 import imb.lh_p3.clinica.service.IConsultaService;
 import imb.lh_p3.clinica.util.DTOResponse;
-import imb.lh_p3.clinica.util.ResourceNotFoundException;
 import jakarta.validation.Valid;
 
 @RestController
@@ -25,54 +26,59 @@ public class ConsultaController {
 	@Autowired
 	IConsultaService service;
 
-	@GetMapping("/consultas")
-	ResponseEntity<DTOResponse<List<Consulta>>> mostrarTodasLasConsultas() {
+
+	@GetMapping("/consulta")
+	public ResponseEntity<DTOResponse<List<Consulta>>> mostrarTodasLasConsultas(){
 		List<Consulta> lista = service.mostrarTodos();
-		DTOResponse<List<Consulta>> dto = new DTOResponse<>(200, "", lista);
-
-		return ResponseEntity.status(HttpStatus.OK).body(dto);
-	}
-
-	@GetMapping("/consultas/{id}")
-	ResponseEntity<DTOResponse<Consulta>> mostrarConsultaPorId(@PathVariable("id") Long id) {
-
-		if (service.existe(id)) {
-			DTOResponse<Consulta> dto = new DTOResponse<>(200, "", service.mostrarPorId(id));
+		if(lista.isEmpty()){
+			throw new ElementoNoExisteException("No hay consultas registradas");
+		}else{
+			DTOResponse<List<Consulta>> dto = new DTOResponse<>(200, "Lista de consultas", lista);
 			return ResponseEntity.status(HttpStatus.OK).body(dto);
-		} else {
-			throw new ResourceNotFoundException("No existe esta consulta: " + id);
 		}
 	}
 
-	@PostMapping("/consultas")
-	ResponseEntity<DTOResponse<Consulta>> crearConsulta(@Valid @RequestBody Consulta consulta) {
-		if (service.existe(consulta.getId())) {
-			throw new ResourceNotFoundException("Ya existe esta consulta: " + consulta.getId());
-		} else {
-			DTOResponse<Consulta> dto = new DTOResponse<>(201, "La consulta se creó con éxito", service.guardar(consulta));
+	@GetMapping("/consulta/{id}")
+	public ResponseEntity<DTOResponse<Consulta>> mostrarConsultaPorId(@PathVariable("id") Long id){
+		Consulta consulta = service.mostrarPorId(id);
+		if(consulta == null){
+			throw new ElementoNoExisteException("La consulta con el id "+ id + " no existe");
+		}else{
+			DTOResponse<Consulta> dto = new DTOResponse<>(200, "Consulta:", consulta);
+			return ResponseEntity.status(HttpStatus.OK).body(dto);
+		}
+	}
+
+	@PostMapping("/consulta")
+	public ResponseEntity<DTOResponse<Consulta>> guardarConsulta(@Valid @RequestBody Consulta consulta){
+		if(service.existe(consulta.getIdConsulta())){
+			throw new ElementeYaExisteException("Ya hay guardada una consulta ");
+		}else{
+			DTOResponse<Consulta> dto = new DTOResponse<>(201, "Consulta guardada correctamente", service.guardar(consulta));
 			return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 		}
 	}
 
-	@PutMapping("/consultas")
-	ResponseEntity<DTOResponse<Consulta>> actualizarConsulta(@Valid @RequestBody Consulta consulta) {
-
-		if (service.existe(consulta.getId())) {
-			DTOResponse<Consulta> dto = new DTOResponse<>(200, "La consulta se actualizó con éxito", service.guardar(consulta));
-			return ResponseEntity.ok().body(dto);
-		} else {
-			throw new ResourceNotFoundException("No existe esta consulta: " + consulta.getId());
+	@PutMapping("/consulta")
+	public ResponseEntity<DTOResponse<Consulta>> actualizarConsulta(@Valid @RequestBody Consulta consulta){
+		if(service.existe(consulta.getIdConsulta())){
+			DTOResponse<Consulta> dto = new DTOResponse<>(200, "Consulta actualizada correctamente", service.guardar(consulta));
+			return ResponseEntity.status(HttpStatus.OK).body(dto);
+		}else{
+			throw new ElementoNoExisteException("La consulta que esta tratando de actualizar no existe");
 		}
 	}
 
-	@DeleteMapping("/consultas/{id}")
-	ResponseEntity<DTOResponse<?>> eliminarConsulta(@PathVariable("id") Long id) {
-		if (service.existe(id)) {
+	@DeleteMapping("/consulta/{id}")
+	public ResponseEntity<DTOResponse<?>> eliminarConsulta(@PathVariable("id")Long id){
+		if(service.existe(id)){
 			service.eliminar(id);
-			DTOResponse<?> dtoSi = new DTOResponse<>(200, "La consulta se eliminó", null);
-			return ResponseEntity.status(HttpStatus.OK).body(dtoSi);
-		} else {
-			throw new ResourceNotFoundException("La consulta con ID " + id + " no existe.");
+			DTOResponse<?> dto = new DTOResponse<>(200, "Consulta eliminada correctamente", null);
+			return ResponseEntity.status(HttpStatus.OK).body(dto);
+		}else{
+			throw new ElementoNoExisteException("La consulta a eliminar no existe");
 		}
 	}
+
+
 }

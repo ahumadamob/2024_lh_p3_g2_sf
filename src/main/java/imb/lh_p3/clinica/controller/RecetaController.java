@@ -3,7 +3,13 @@ package imb.lh_p3.clinica.controller;
 
 import java.util.List;
 
+import imb.lh_p3.clinica.exceptions.ElementeYaExisteException;
+import imb.lh_p3.clinica.exceptions.ElementoNoExisteException;
+import imb.lh_p3.clinica.util.DTOResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,74 +20,62 @@ import org.springframework.web.bind.annotation.RestController;
 
 import imb.lh_p3.clinica.entity.Receta;
 import imb.lh_p3.clinica.service.IRecetaService;
-import imb.lh_p3.clinica.util.ApiResponse;
 
 @RestController
 public class RecetaController {
     @Autowired
-    IRecetaService service;
+    private IRecetaService service;
 
-    @GetMapping("/recetas")
-    ApiResponse<List<Receta>> mostrarTodos() {
-        ApiResponse<List<Receta>> response = new ApiResponse<>();
+    @GetMapping("/receta")
+    public ResponseEntity<DTOResponse<List<Receta>>> mostrarTodasLasRecetas() {
         List<Receta> lista = service.mostrarTodos();
-
         if (lista.isEmpty()) {
-            response.setError("No se encuentran registros");
+            throw new ElementoNoExisteException("No hay recetas registradas");
         } else {
-            response.setData(lista);
+            DTOResponse<List<Receta>> dto = new DTOResponse<>(200, "Lista de recetas", lista);
+            return ResponseEntity.status(HttpStatus.OK).body(dto);
         }
-
-        return response;
     }
 
-    @GetMapping("/recetas/{id}")
-    ApiResponse<Receta> mostrarPorId(@PathVariable("id") Long id) {
-        ApiResponse<Receta> response = new ApiResponse<>();
+    @GetMapping("/receta/{id}")
+    public ResponseEntity<DTOResponse<Receta>> mostrarRecetaPorId(@PathVariable("id") Long id) {
         Receta receta = service.mostrarPorId(id);
-
         if (receta == null) {
-            response.setError("No exite el ID: " + id.toString());
+            throw new ElementoNoExisteException("La receta con el id " + id + " no existe");
         } else {
-            response.setData(receta);
+            DTOResponse<Receta> dto = new DTOResponse<>(200, "Receta:", receta);
+            return ResponseEntity.status(HttpStatus.OK).body(dto);
         }
-        return response;
-
     }
 
     @PostMapping("/receta")
-    ApiResponse<Receta> crearRegistro(@RequestBody Receta receta) {
-        ApiResponse<Receta> response = new ApiResponse<>();
-        if (service.existe(receta.getId())) {
-            response.setError("Ya existe este registro");
+    public ResponseEntity<DTOResponse<Receta>> guardarReceta(@Valid @RequestBody Receta receta) {
+        if (service.existe(receta.getIdReceta())) {
+            throw new ElementeYaExisteException("Esta receta ya ha sido guardada ");
         } else {
-            Receta recetaGuardado = service.guardar(receta);
-            response.setData(recetaGuardado);
+            DTOResponse<Receta> dto = new DTOResponse<>(201, "Receta guardada correctamente", service.guardar(receta));
+            return ResponseEntity.status(HttpStatus.CREATED).body(dto);
         }
-        return response;
     }
 
     @PutMapping("/receta")
-    ApiResponse<Receta> actualizarRegistro(@RequestBody Receta receta) {
-        ApiResponse<Receta> response = new ApiResponse<>();
-        if (service.existe(receta.getId())) {
-            Receta medicoGuardado = service.guardar(receta);
-            response.setData(medicoGuardado);
+    public ResponseEntity<DTOResponse<Receta>> actualizarReceta(@Valid @RequestBody Receta receta) {
+        if (service.existe(receta.getIdReceta())) {
+            DTOResponse<Receta> dto = new DTOResponse<>(200, "Receta actualizada correctamente", service.guardar(receta));
+            return ResponseEntity.status(HttpStatus.OK).body(dto);
         } else {
-            response.setError("El registro no existe");
+            throw new ElementoNoExisteException("La receta que esta tratando de actualizar no existe");
         }
-        return response;
     }
 
     @DeleteMapping("/receta/{id}")
-    String eliminarRegistro(@PathVariable("id") Long id) {
+    public ResponseEntity<DTOResponse<?>> eliminarReceta(@PathVariable("id") Long id) {
         if (service.existe(id)) {
             service.eliminar(id);
-            return "El registro se eliminó correctamente";
+            DTOResponse<?> dto = new DTOResponse<>(200, "Receta eliminada correctamente", null);
+            return ResponseEntity.status(HttpStatus.OK).body(dto);
         } else {
-            return "El id no existe";
+            throw new ElementoNoExisteException("La receta a eliminar no existe");
         }
-
-
     }
 }

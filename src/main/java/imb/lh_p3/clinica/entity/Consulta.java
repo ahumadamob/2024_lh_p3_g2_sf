@@ -1,45 +1,77 @@
 package imb.lh_p3.clinica.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-	@Entity
+import java.util.List;
+
+@Entity
 	public class Consulta {
 
-		@Id
-		@GeneratedValue(strategy=GenerationType.IDENTITY)
-		private Long id;
-		private String turno;
-		private String diagnostico;
-		private String tratamiento;
-		public Long getId() {
-			return id;
-		}
-		public void setId(Long id) {
-			this.id = id;
-		}
-		public String getTurno() {
-			return turno;
-		}
-		public void setTurno(String turno) {
-			this.turno = turno;
-		}
-		public String getDiagnostico() {
-			return diagnostico;
-		}
-		public void setDiagnostico(String diagnostico) {
-			this.diagnostico = diagnostico;
-		}
-		public String getTratamiento() {
-			return tratamiento;
-		}
-		public void setTratamiento(String tratamiento) {
-			this.tratamiento = tratamiento;
-		}
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long idConsulta;
 
 
+	@OneToOne
+	@JoinColumn(name = "idTurno")
+	private Turno turno;
+
+
+	@OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
+	private List<Pedido> pedidos;
+
+	@NotNull(message = "Debe completar un diagnostico")
+	@NotBlank(message = "El Diagnostico no puede estar en blanco")
+	@Min(value = 5, message = "Describa el diagnostico del paciente")
+	private String diagnostico;
+
+	@NotNull(message = "Debe completar un tratamiento")
+	@NotBlank(message = "El tratamiento no puede estar en blanco")
+	@Min(value = 5, message = "Describa el tratamiento del paciente")
+	private String tratamiento;
+
+	public Long getIdConsulta() {
+		return idConsulta;
 	}
 
+	public void setIdConsulta(Long idConsulta) {
+		this.idConsulta = idConsulta;
+	}
 
+	public Turno getTurno() {
+		return turno;
+	}
+
+	public void setTurno(Turno turno) {
+		this.turno = turno;
+	}
+
+	public @NotNull(message = "Debe completar un diagnostico") @NotBlank(message = "El Diagnostico no puede estar en blanco") @Min(value = 5, message = "Describa el diagnostico del paciente") String getDiagnostico() {
+		return diagnostico;
+	}
+
+	public void setDiagnostico(@NotNull(message = "Debe completar un diagnostico") @NotBlank(message = "El Diagnostico no puede estar en blanco") @Min(value = 5, message = "Describa el diagnostico del paciente") String diagnostico) {
+		this.diagnostico = diagnostico;
+	}
+
+	public @NotNull(message = "Debe completar un tratamiento") @NotBlank(message = "El tratamiento no puede estar en blanco") @Min(value = 5, message = "Describa el tratamiento del paciente") String getTratamiento() {
+		return tratamiento;
+	}
+
+	public void setTratamiento(@NotNull(message = "Debe completar un tratamiento") @NotBlank(message = "El tratamiento no puede estar en blanco") @Min(value = 5, message = "Describa el tratamiento del paciente") String tratamiento) {
+		this.tratamiento = tratamiento;
+	}
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
+}

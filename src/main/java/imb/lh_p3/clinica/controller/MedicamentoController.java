@@ -2,8 +2,7 @@ package imb.lh_p3.clinica.controller;
 
     
 	import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
+	import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,11 +20,19 @@ import imb.lh_p3.clinica.service.IMedicamentoService;
 import imb.lh_p3.clinica.util.DTOResponse;
 import jakarta.validation.Valid;
 
-	@RestController
+	import org.slf4j.Logger;
+	import org.slf4j.LoggerFactory;
+
+@RestController
 	public class MedicamentoController {
 
-		@Autowired // Inyección de dependencias del servicio de medicamentos
+
+	private static final Logger logger = LoggerFactory.getLogger(MedicamentoController.class);
+
+	@Autowired // Inyección de dependencias del servicio de medicamentos
 		IMedicamentoService service;
+
+
 		@GetMapping("/medicamento")
 		public ResponseEntity<DTOResponse<List<Medicamento>>> mostrarTodosLosMedicamentos(){
 			List<Medicamento> lista = service.mostrarTodos();
@@ -48,15 +55,19 @@ import jakarta.validation.Valid;
 			}
 		}
 
-		@PostMapping("/medicamento")
-		public ResponseEntity<DTOResponse<Medicamento>> guardarMedicamento(@Valid @RequestBody Medicamento medicamento){
-			if(service.existe(medicamento.getId())){
-				throw new ElementeYaExisteException("Este medicamento ya esta guardado ");
-			}else{
-				DTOResponse<Medicamento> dto = new DTOResponse<>(201, "Medicamento guardado correctamente", service.guardar(medicamento));
-				return ResponseEntity.status(HttpStatus.CREATED).body(dto);
-			}
+	@PostMapping("/medicamento")
+	public ResponseEntity<DTOResponse<Medicamento>> guardarMedicamento(@Valid @RequestBody Medicamento medicamento) {
+		if (service.existe(medicamento.getId())) {
+			throw new ElementeYaExisteException("Este medicamento ya está guardado");
 		}
+
+		if (!medicamento.getActivo()) {
+			logger.info("Se ha creado un medicamento inactivo: {}", medicamento.getNombre());
+		}
+
+		DTOResponse<Medicamento> dto = new DTOResponse<>(201, "Medicamento guardado correctamente", service.guardar(medicamento));
+		return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+	}
 
 		@PutMapping("/medicamento")
 		public ResponseEntity<DTOResponse<Medicamento>> actualizarMedicamento(@Valid @RequestBody Medicamento medicamento){

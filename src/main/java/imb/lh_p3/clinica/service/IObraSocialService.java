@@ -8,15 +8,13 @@ import java.util.List;
 
 import imb.lh_p3.clinica.entity.ObraSocial;
 
-/**
- *
- * @author Christian
- */
 
 public interface IObraSocialService {
-    	public List<ObraSocial>mostrarTodos();
+
+	public List<ObraSocial> mostrarTodos();
 	public ObraSocial mostrarPorId(Long id);
-	public ObraSocial guardar(ObraSocial turno);
+	public ObraSocial guardar(ObraSocial obraSocial);
 	public void eliminar(Long id);
 	public boolean existe(Long id);
+
 }

@@ -15,74 +15,47 @@ import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice  // Esta anotación permite aplicar el manejo de excepciones a todos los controladores en la aplicación
 public class GlobalExceptionHandler {
-	@ExceptionHandler(ResourceNotFoundException.class)
-	public ResponseEntity<DTOResponse<String>> handleResourceNotFoundException(ResourceNotFoundException ex) {
-		DTOResponse<String> response = new DTOResponse<>(404, ex.getMessage(), null);
-		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-	}
 
-    // Manejador para excepciones de violaciones de restricciones en validación (ConstraintViolationException)
-    // Ocurre en validaciones a nivel de servicio o repositorio
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<DTOResponse<?>> handleConstraintViolationException(ConstraintViolationException ex) {
+    public ResponseEntity<DTOResponse<List<String>>> handleConstraintViolationException(ConstraintViolationException ex) {
         List<String> errors = new ArrayList<>();
-        // Itera y extrae cada mensaje de violación y lo añade a la lista de errores
-        for (ConstraintViolation<?> violation : ex.getConstraintViolations()){
+        for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
             errors.add(violation.getMessage());
         }
-        // Crea una respuesta DTO personalizada con el código 400 (BAD_REQUEST)y la lista de los errores
-        DTOResponse<?> response = new DTOResponse<>(HttpStatus.BAD_REQUEST.value(), errors, null);
 
-        // Devuelve el dto y el estatus http con codigo 400
+        DTOResponse<List<String>> response = new DTOResponse<>(HttpStatus.BAD_REQUEST.value(), errors, null);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    // Manejador para excepciones de validación en el cuerpo de la solicitud (MethodArgumentNotValidException)
-    // Suele ocurrir cuando fallan las validaciones de anotaciones como @Valid en @RequestBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<DTOResponse<Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<DTOResponse<List<String>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         List<String> errorMessages = new ArrayList<>();
-
-        // Extrae los errores de cada campo que no cumple con las restricciones y los agrega a la lista de errores
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errorMessages.add(error.getField() + ": " + error.getDefaultMessage())
         );
-        // Crea un DTOResponse con el estado 400 (Bad Request) y los mensajes de error
-        DTOResponse<Object> response = new DTOResponse<>(HttpStatus.BAD_REQUEST.value(), errorMessages,null);
-        // Devuelve la respuesta con el código 400 y los errore
+
+        DTOResponse<List<String>> response = new DTOResponse<>(HttpStatus.BAD_REQUEST.value(), errorMessages, null);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    // Manejador para excepciones generales que no están definidas específicamente
-    // Devuelve un error 500 (Internal Server Error) con un mensaje genérico
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<DTOResponse<?>> handleGeneralException(Exception ex) {
-        List<String> errors = new ArrayList<>();
-        errors.add("Ocurrió un error inesperado: " + ex.getMessage());
+    public ResponseEntity<DTOResponse<String>> handleGeneralException(Exception ex) {
 
-        // Crea un DTOResponse con estado 500 (INTERNAL_SERVER_ERROR) y mensaje de error general
-        DTOResponse<?> response = new DTOResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), errors, null);
-        // Devuelve el estado 500 y el mensaje de error general
+        DTOResponse<String> response = new DTOResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                List.of("Ocurrió un error inesperado: " + ex.getMessage()), null);
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    // Manejador para excepciones cuando un recurso no existe en la base de datos
-    // Devuelve un error 404 (Not Found) cuando no se encuentra el recurso
     @ExceptionHandler(ElementoNoExisteException.class)
-    public ResponseEntity<DTOResponse<?>> handleElementoNoExiste(ElementoNoExisteException ex) {
-        // Creamos el DTO con código 404 (Not Found)
-        DTOResponse<?> response = new DTOResponse<>(HttpStatus.NOT_FOUND.value(), List.of(ex.getMessage()), null);
-        // Enviamos el código de estatus junto con el DTO
+    public ResponseEntity<DTOResponse<String>> ElementoNoExisteException(ElementoNoExisteException ex){
+        DTOResponse<String> response = new DTOResponse<>(HttpStatus.NOT_FOUND.value(), List.of(ex.getMessage()), null);
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    // Manejador para excepciones cuando un recurso ya existe en la base de datos
-    // Devuelve un error 409 (Conflict) si se intenta crear un recurso duplicado
     @ExceptionHandler(ElementeYaExisteException.class)
-    public ResponseEntity<DTOResponse<?>> manejarRecursoYaExiste(ElementeYaExisteException ex) {
-        // Creamos el DTO con código 409 (Conflict)
-        DTOResponse<?> response = new DTOResponse<>(HttpStatus.CONFLICT.value(), List.of(ex.getMessage()), null);
-        // Enviamos el código de estatus junto con el DTO
+    public ResponseEntity<DTOResponse<String>> ElementeYaExisteException(ElementeYaExisteException ex){
+        DTOResponse<String> response = new DTOResponse<>(HttpStatus.CONFLICT.value(), List.of(ex.getMessage()), null);
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
+
 }

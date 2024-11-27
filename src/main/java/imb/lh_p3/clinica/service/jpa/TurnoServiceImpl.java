@@ -13,43 +13,36 @@ import imb.lh_p3.clinica.service.ITurnoService;
 @Service
 public class TurnoServiceImpl implements ITurnoService {
 
-
 	@Autowired
-	private TurnoRepository repo;
+	private TurnoRepository repositorio;
 
 	@Override
 	public List<Turno> mostrarTodos() {
-		return repo.findAll();
-
+		return repositorio.findAll();
 	}
 
 	@Override
 	public Turno mostrarPorId(Long id) {
-		return repo.findById(id).orElse(null);
-
+		return repositorio.findById(id).orElse(null);
 	}
 
 	@Override
 	public Turno guardar(Turno turno) {
-		return repo.save(turno);
+		return repositorio.save(turno);
 	}
-
 
 	@Override
 	public void eliminar(Long id) {
-		repo.deleteById(id);
-		// TODO Auto-generated method stub
-
+		repositorio.deleteById(id);
 	}
 
 	@Override
 	public boolean existe(Long id) {
-		if(id==null) {
+		if(id==null){
 			return false;
-		}else {
-			return repo.existsById(id);
+		}else{
+			return repositorio.existsById(id);
 		}
-
 	}
 
 }

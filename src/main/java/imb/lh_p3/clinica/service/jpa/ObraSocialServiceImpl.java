@@ -13,39 +13,38 @@ import imb.lh_p3.clinica.entity.ObraSocial;
 import imb.lh_p3.clinica.repository.ObraSocialRepository;
 import imb.lh_p3.clinica.service.IObraSocialService;
 
-/**
- *
- * @author Christian
- */
 @Service
 public class ObraSocialServiceImpl implements IObraSocialService {
+
     @Autowired
-    private ObraSocialRepository obraSocialRespository;
+    private ObraSocialRepository repositorio;
 
     @Override
     public List<ObraSocial> mostrarTodos() {
-        return obraSocialRespository.findAll();
-
+        return repositorio.findAll();
     }
 
     @Override
     public ObraSocial mostrarPorId(Long id) {
-        return obraSocialRespository.findById(id).orElse(null);
+        return repositorio.findById(id).orElse(null);
     }
 
     @Override
     public ObraSocial guardar(ObraSocial obraSocial) {
-        return obraSocialRespository.save(obraSocial);
+        return repositorio.save(obraSocial);
     }
 
     @Override
     public void eliminar(Long id) {
-        obraSocialRespository.deleteById(id);
+        repositorio.deleteById(id);
     }
 
     @Override
     public boolean existe(Long id) {
-        return obraSocialRespository.existsById(id);
+        if(id==null){
+            return false;
+        }else{
+            return repositorio.existsById(id);
+        }
     }
-
 }

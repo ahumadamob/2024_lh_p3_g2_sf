@@ -9,10 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import imb.lh_p3.clinica.entity.ObraSocial;
 
-/**
- *
- * @author Christian
- */
 @Repository
 public interface ObraSocialRepository extends JpaRepository<ObraSocial, Long> {
 

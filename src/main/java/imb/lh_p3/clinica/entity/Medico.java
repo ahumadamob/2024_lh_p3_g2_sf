@@ -1,71 +1,100 @@
 	package imb.lh_p3.clinica.entity;
 	
-	import jakarta.persistence.Entity;
-	import jakarta.persistence.GeneratedValue;
-	import jakarta.persistence.GenerationType;
-	import jakarta.persistence.Id;
+	import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+	import jakarta.persistence.*;
+	import jakarta.validation.constraints.Email;
 	import jakarta.validation.constraints.NotBlank;
 	import jakarta.validation.constraints.NotNull;
 	import jakarta.validation.constraints.Size;
-	
+
+	import java.util.List;
+
 	@Entity
 	public class Medico{
-	
+
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		private Long id;
-		@NotNull(message = "El nombre del medico es obligatorio")
-		private Long matricula;
+		private Long idMedico;
+
+		private Long idEspecialidad;
+
+		@NotNull(message = "El nombre es obligatorio")
 		@NotBlank(message = "El nombre no puede estar en blanco")
-		@Size(min = 2, max = 500, message = "El nombre del medico debe tener entre 2 y 500 caracteres")
-	        private String nombre;
-	private String apellido;
-	private int telefono;
-	private String correo;
-	private String especialidad;
+		@Size(min = 2, max = 100, message = "El nombre debe tener como minimo 2 caracteres")
+		private String nombre;
 
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public Long getMatricula() {
-		return matricula;
-	}
-	public void setMatricula(Long matricula) {
-		this.matricula = matricula;
-	}
-	public String getNombre() {
-		return nombre;
-	}
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+		@NotNull(message = "El apellido es obligatorio")
+		@NotBlank(message = "El apellido no puede estar en blanco")
+		@Size(min = 2, max = 100, message = "El apellido debe tener como minimo 2 caracteres")
+		private String apellido;
 
-	public String getApellido() {
-		return apellido;
-	}
-	public void setApellido(String apellido) {
-		this.apellido = apellido;
-	}
-	public int getTelefono() {
-		return telefono;
-	}
-	public void setTelefono(int telefono) {
-		this.telefono = telefono;
-	}
-	public String getCorreo() {
-		return correo;
-	}
-	public void setCorreo(String correo) {
-		this.correo = correo;
-	}
-	public String getEspecialidad() {
-		return especialidad;
-	}
-	public void setEspecialidad(String especialidad) {
-		this.especialidad = especialidad;
-	}
+		private String matricula;
 
-}
+		@Email(message = "Debe proporcionar un correo electrónico válido")
+		private String correo;
+
+		@ManyToOne
+		@JoinColumn(name = "idEspecialidad", insertable = false, updatable = false)
+		@JsonIgnoreProperties("medicos")
+		private Especialidad especialidad;
+
+		@OneToMany(mappedBy = "medico", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+		@JsonIgnoreProperties("medico") // Ignora el medico en los turnos
+		private List<Turno> turnos;
+
+		public Long getIdMedico() {
+			return idMedico;
+		}
+
+		public void setIdMedico(Long idMedico) {
+			this.idMedico = idMedico;
+		}
+
+		public Long getIdEspecialidad() {
+			return idEspecialidad;
+		}
+
+		public void setIdEspecialidad(Long idEspecialidad) {
+			this.idEspecialidad = idEspecialidad;
+		}
+
+		public String getNombre() {
+			return nombre;
+		}
+
+		public void setNombre(String nombre) {
+			this.nombre = nombre;
+		}
+
+		public String getApellido() {
+			return apellido;
+		}
+
+		public void setApellido(String apellido) {
+			this.apellido = apellido;
+		}
+
+		public String getMatricula() {
+			return matricula;
+		}
+
+		public void setMatricula(String matricula) {
+			this.matricula = matricula;
+		}
+
+		public String getCorreo() {
+			return correo;
+		}
+
+		public void setCorreo(String correo) {
+			this.correo = correo;
+		}
+
+		public Especialidad getEspecialidad() {
+			return especialidad;
+		}
+
+		public void setEspecialidad(Especialidad especialidad) {
+			this.especialidad = especialidad;
+		}
+	}

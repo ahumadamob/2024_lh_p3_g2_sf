@@ -22,6 +22,8 @@ public class Medicamento {
 	@ManyToMany(mappedBy = "medicamentos")
 	private List<Receta> recetas;
 
+	private Boolean activo;
+
 	public Long getId() {
 		return id;
 	}
@@ -41,5 +43,13 @@ public class Medicamento {
 
 	public void setRecetas(List<Receta> recetas) {
 		this.recetas = recetas;
+	}
+
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
 	}
 }

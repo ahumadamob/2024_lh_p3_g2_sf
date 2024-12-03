@@ -2,6 +2,7 @@ package imb.lh_p3.clinica.service.jpa;
 
 import java.util.List;
 
+import imb.lh_p3.clinica.exceptions.ElementeYaExisteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,12 @@ public class MedicamentoServiceImpl implements IMedicamentoService{
 
 	@Override
 	public Medicamento guardar(Medicamento medicamento) {
-		return repositorio.save(medicamento);
+
+		if(repositorio.existsByNombre(medicamento.getNombre())){
+			throw new ElementeYaExisteException("Ya hay un medicamento regritrado con este nombre");
+		}else {
+			return repositorio.save(medicamento);
+		}
 	}
 
 	@Override
